@@ -13,7 +13,7 @@ Ensure you have Flutter and Dart installed on your system. Then run the followin
 
 ```bash
 git clone https://github.com/aridminds/greenguard.git
-cd greenguard
+cd greenguard/src/flutter
 flutter pub get
 ```
 
