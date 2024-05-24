@@ -12,8 +12,8 @@ GreenGuard is an application that allows users to monitor the values of their pl
 Ensure you have Flutter and Dart installed on your system. Then run the following commands:
 
 ```bash
-git clone https://github.com/aridminds/GreenGuard.git
-cd GreenGuard
+git clone https://github.com/aridminds/greenguard.git
+cd greenguard
 flutter pub get
 ```
 
