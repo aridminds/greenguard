@@ -11,7 +11,7 @@ class PlantsViewModel extends BaseViewModel {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
-      builder: (context) => const NewPlantSheet(),
+      builder: (context) => NewPlantSheet(onPlantAdded: notifyListeners),
     );
   }
 }

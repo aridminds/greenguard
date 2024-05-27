@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:greenguard/db/database.dart';
+import 'package:greenguard/db/plant_model.dart';
 import 'package:greenguard/ui/views/plants/new_plant_action_button.dart';
 import 'package:greenguard/ui/views/plants/plants_viewmodel.dart';
 import 'package:greenguard/ui/widgets/custom_sliver_app_bar.dart';
@@ -22,31 +24,34 @@ class PlantsView extends StatelessWidget {
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(20.0),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 400.0,
-                    mainAxisSpacing: 20.0,
-                    crossAxisSpacing: 20.0,
-                    childAspectRatio: 1.0,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                      return const Card(
-                        //color: Colors.teal[100 * (index % 9)],
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              leading: Icon(Symbols.spa),
-                              title: Text('Pflanze'),
-                              subtitle: Text('Kurze Beschreibung'),
-                            ),
-                          ],
+                sliver: FutureBuilder<List<PlantModel>>(
+                  future: Database.getPlants(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      final plants = snapshot.data!;
+                      return SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final plant = plants[index];
+                            return Card(
+                              child: ListTile(
+                                leading: const Icon(Symbols.potted_plant),
+                                title: Text(plant.name),
+                                subtitle: Text(plant.description),
+                              ),
+                            );
+                          },
+                          childCount: plants.length,
                         ),
                       );
-                    },
-                    childCount: 8,
-                  ),
+                    } else {
+                      return const SliverFillRemaining(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ),
             ],

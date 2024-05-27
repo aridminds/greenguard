@@ -6,6 +6,9 @@ import 'package:greenguard/ui/views/navigation/navigation_view.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
+
+  
+
   runApp(const MyApp());
 }
 

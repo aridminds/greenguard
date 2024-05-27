@@ -3,17 +3,20 @@ import 'package:greenguard/ui/views/plants/new_plant_sheet_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
 class NewPlantSheet extends StatelessWidget {
-  const NewPlantSheet({super.key});
+  const NewPlantSheet({super.key, this.onPlantAdded});
+
+  final Function? onPlantAdded;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewPlantSheetViewmodel>.reactive(
-      viewModelBuilder: () => NewPlantSheetViewmodel(),
+      viewModelBuilder: () =>
+          NewPlantSheetViewmodel(),
       builder: (context, viewModel, child) {
         return DraggableScrollableSheet(
           expand: false,
           snap: true,
-          initialChildSize: 0.6,
+          initialChildSize: 0.75,
           minChildSize: 0.5,
           maxChildSize: 0.9,
           builder: (_, scrollContainer) => SingleChildScrollView(
@@ -43,7 +46,15 @@ class NewPlantSheet extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     FilledButton(
-                      onPressed: () => viewModel.addPlant(context),
+                      onPressed: () async {
+                        await viewModel.addPlant(context);
+
+                        if (onPlantAdded != null) {
+                          onPlantAdded!();
+                        }
+
+                        Navigator.of(context).pop();
+                      },
                       child: const Text('Hinzufügen'),
                     ),
                     const SizedBox(height: 16),
