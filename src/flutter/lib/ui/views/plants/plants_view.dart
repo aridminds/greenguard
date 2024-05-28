@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:greenguard/db/database.dart';
 import 'package:greenguard/db/plant_model.dart';
 import 'package:greenguard/ui/views/plants/new_plant_action_button.dart';
 import 'package:greenguard/ui/views/plants/plants_viewmodel.dart';
@@ -25,7 +24,7 @@ class PlantsView extends StatelessWidget {
               SliverPadding(
                 padding: const EdgeInsets.all(20.0),
                 sliver: FutureBuilder<List<PlantModel>>(
-                  future: Database.getPlants(),
+                  future: viewModel.getPlants(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       final plants = snapshot.data!;
@@ -34,10 +33,16 @@ class PlantsView extends StatelessWidget {
                           (context, index) {
                             final plant = plants[index];
                             return Card(
-                              child: ListTile(
-                                leading: const Icon(Symbols.potted_plant),
-                                title: Text(plant.name),
-                                subtitle: Text(plant.description),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(12.0),
+                                child: ListTile(
+                                  leading: const Icon(Symbols.potted_plant),
+                                  title: Text(plant.name),
+                                  subtitle: Text(plant.description),
+                                ),
+                                onTap: () => viewModel.tapPlant(plant),
+                                onLongPress: () =>
+                                    viewModel.longPressPlant(plant),
                               ),
                             );
                           },

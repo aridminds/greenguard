@@ -10,8 +10,8 @@ class NewPlantSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewPlantSheetViewmodel>.reactive(
-      viewModelBuilder: () =>
-          NewPlantSheetViewmodel(),
+      onViewModelReady: (model) => model.initialize(context),
+      viewModelBuilder: () => NewPlantSheetViewmodel(),
       builder: (context, viewModel, child) {
         return DraggableScrollableSheet(
           expand: false,
@@ -46,15 +46,17 @@ class NewPlantSheet extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     FilledButton(
-                      onPressed: () async {
-                        await viewModel.addPlant(context);
+                      onPressed: viewModel.newPlantButtonEnabled
+                          ? () async {
+                              await viewModel.addPlant(context);
 
-                        if (onPlantAdded != null) {
-                          onPlantAdded!();
-                        }
+                              if (onPlantAdded != null) {
+                                onPlantAdded!();
+                              }
 
-                        Navigator.of(context).pop();
-                      },
+                              Navigator.of(context).pop();
+                            }
+                          : null,
                       child: const Text('Hinzufügen'),
                     ),
                     const SizedBox(height: 16),

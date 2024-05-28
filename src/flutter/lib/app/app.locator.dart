@@ -9,6 +9,7 @@
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
+import '../db/database_helper.dart';
 import '../ui/views/home/home_viewmodel.dart';
 import '../ui/views/navigation/navigation_viewmodel.dart';
 import '../ui/views/plants/plants_viewmodel.dart';
@@ -28,4 +29,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => PlantsViewModel());
   locator.registerLazySingleton(() => NavigationViewModel());
   locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton(() => DatabaseHelper());
 }

@@ -1,3 +1,4 @@
+import 'package:greenguard/db/database_helper.dart';
 import 'package:greenguard/ui/views/home/home_viewmodel.dart';
 import 'package:greenguard/ui/views/plants/plants_view.dart';
 import 'package:greenguard/ui/views/plants/plants_viewmodel.dart';
@@ -16,7 +17,8 @@ import '../ui/views/navigation/navigation_viewmodel.dart';
     LazySingleton(classType: HomeViewModel),
     LazySingleton(classType: PlantsViewModel),
     LazySingleton(classType: NavigationViewModel),
-    LazySingleton(classType: NavigationService)
+    LazySingleton(classType: NavigationService),
+    LazySingleton(classType: DatabaseHelper),
   ],
 )
 
