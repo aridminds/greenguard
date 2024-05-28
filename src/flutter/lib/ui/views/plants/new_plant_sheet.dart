@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/ui/views/plants/new_plant_sheet_viewmodel.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:stacked/stacked.dart';
 
 class NewPlantSheet extends StatelessWidget {
@@ -11,7 +12,8 @@ class NewPlantSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<NewPlantSheetViewmodel>.reactive(
       onViewModelReady: (model) => model.initialize(context),
-      viewModelBuilder: () => NewPlantSheetViewmodel(),
+      viewModelBuilder: () =>
+          NewPlantSheetViewmodel(onPlantAdded: onPlantAdded),
       builder: (context, viewModel, child) {
         return DraggableScrollableSheet(
           expand: false,
@@ -33,6 +35,7 @@ class NewPlantSheet extends StatelessWidget {
                       controller: viewModel.plantNameController,
                       decoration: const InputDecoration(
                         labelText: 'Name',
+                        prefixIcon: Icon(Symbols.psychiatry),
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -41,21 +44,14 @@ class NewPlantSheet extends StatelessWidget {
                       controller: viewModel.plantDescriptionController,
                       decoration: const InputDecoration(
                         labelText: 'Beschreibung',
+                        prefixIcon: Icon(Symbols.menu_book),
                         border: OutlineInputBorder(),
                       ),
                     ),
                     const SizedBox(height: 16),
                     FilledButton(
                       onPressed: viewModel.newPlantButtonEnabled
-                          ? () async {
-                              await viewModel.addPlant(context);
-
-                              if (onPlantAdded != null) {
-                                onPlantAdded!();
-                              }
-
-                              Navigator.of(context).pop();
-                            }
+                          ? () async => await viewModel.addPlant(context)
                           : null,
                       child: const Text('Hinzufügen'),
                     ),

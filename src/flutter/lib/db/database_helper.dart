@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:greenguard/db/plant_model.dart';
+import 'package:greenguard/models/plant.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sql;
@@ -36,7 +35,7 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<void> deletePlant(PlantModel plant) async {
+  Future<void> deletePlant(Plant plant) async {
     await _database.delete(
       'plants',
       where: 'id = ?',
@@ -44,11 +43,11 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<PlantModel>> getPlants() async {
+  Future<List<Plant>> getPlants() async {
     final List<Map<String, dynamic>> plants = await _database.query('plants');
 
     return List.generate(plants.length, (i) {
-      return PlantModel(
+      return Plant(
         id: plants[i]['id'],
         name: plants[i]['name'],
         description: plants[i]['description'],

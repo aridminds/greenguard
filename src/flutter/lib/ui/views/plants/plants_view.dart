@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenguard/db/plant_model.dart';
+import 'package:greenguard/models/plant.dart';
 import 'package:greenguard/ui/views/plants/new_plant_action_button.dart';
 import 'package:greenguard/ui/views/plants/plants_viewmodel.dart';
 import 'package:greenguard/ui/widgets/custom_sliver_app_bar.dart';
@@ -23,7 +23,7 @@ class PlantsView extends StatelessWidget {
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(20.0),
-                sliver: FutureBuilder<List<PlantModel>>(
+                sliver: FutureBuilder<List<Plant>>(
                   future: viewModel.getPlants(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {

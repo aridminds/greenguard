@@ -20,7 +20,7 @@ class NewPlantActionButton extends StatelessWidget {
       children: [
         SpeedDialChild(
           child: const Icon(Symbols.add),
-          label: 'Manuell hinzufügen',
+          label: 'Manuell',
           labelBackgroundColor: Theme.of(context).colorScheme.primary,
           labelStyle: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
@@ -36,7 +36,7 @@ class NewPlantActionButton extends StatelessWidget {
         ),
         SpeedDialChild(
           child: const Icon(Symbols.bluetooth),
-          label: 'BTHome Gerät hinzufügen',
+          label: 'Bluetooth (BTHome)',
           labelBackgroundColor: Theme.of(context).colorScheme.primary,
           labelStyle: TextStyle(
             color: Theme.of(context).colorScheme.onPrimary,
