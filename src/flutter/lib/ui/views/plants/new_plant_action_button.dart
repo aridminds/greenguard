@@ -3,9 +3,10 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class NewPlantActionButton extends StatelessWidget {
-  const NewPlantActionButton({super.key, this.onAddPlantPressed});
+  const NewPlantActionButton({super.key, this.onAddPlantPressed, this.onAddPlantBluetoothPressed});
 
   final Function? onAddPlantPressed;
+  final Function? onAddPlantBluetoothPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,9 @@ class NewPlantActionButton extends StatelessWidget {
           ),
           backgroundColor: Theme.of(context).colorScheme.primary,
           foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          onTap: () {
+            onAddPlantBluetoothPressed!();
+          },
         ),
       ],
     );

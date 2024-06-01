@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/app/app.locator.dart';
-import 'package:greenguard/db/database_helper.dart';
 import 'package:greenguard/models/plant.dart';
+import 'package:greenguard/services/database_helper.dart';
+import 'package:greenguard/ui/views/plants/new_plant_bluetooth_sheet.dart';
 import 'package:greenguard/ui/views/plants/new_plant_sheet.dart';
 import 'package:stacked/stacked.dart';
 
@@ -21,15 +22,16 @@ class PlantsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> showNewPlantSheet(BuildContext parentContext) {
+  Future<void> showNewPlantSheet(BuildContext parentContext, {bool isBluetooth = false}) {
     return showModalBottomSheet(
       context: parentContext,
       useSafeArea: true,
       isScrollControlled: true,
+      showDragHandle: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
-      builder: (context) => NewPlantSheet(onPlantAdded: notifyListeners),
+      builder: (context) => isBluetooth ? NewPlantBluetoothSheet(onPlantAdded: notifyListeners) : NewPlantSheet(onPlantAdded: notifyListeners),
     );
   }
 }

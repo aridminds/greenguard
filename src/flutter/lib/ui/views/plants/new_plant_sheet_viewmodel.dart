@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/app/app.locator.dart';
-import 'package:greenguard/db/database_helper.dart';
+import 'package:greenguard/services/database_helper.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 

@@ -18,9 +18,9 @@ class NewPlantSheet extends StatelessWidget {
         return DraggableScrollableSheet(
           expand: false,
           snap: true,
-          initialChildSize: 0.75,
+          initialChildSize: 0.90,
           minChildSize: 0.5,
-          maxChildSize: 0.9,
+          maxChildSize: 0.90,
           builder: (_, scrollContainer) => SingleChildScrollView(
             controller: scrollContainer,
             child: SafeArea(

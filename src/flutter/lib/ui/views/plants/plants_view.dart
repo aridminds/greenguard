@@ -63,6 +63,7 @@ class PlantsView extends StatelessWidget {
           ),
           floatingActionButton: NewPlantActionButton(
             onAddPlantPressed: () => viewModel.showNewPlantSheet(context),
+            onAddPlantBluetoothPressed: () => viewModel.showNewPlantSheet(context, isBluetooth: true),
           ),
         );
       },

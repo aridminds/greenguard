@@ -1,4 +1,4 @@
-import 'package:greenguard/db/database_helper.dart';
+import 'package:greenguard/services/database_helper.dart';
 import 'package:greenguard/ui/views/home/home_viewmodel.dart';
 import 'package:greenguard/ui/views/plants/plants_view.dart';
 import 'package:greenguard/ui/views/plants/plants_viewmodel.dart';
