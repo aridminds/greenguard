@@ -51,14 +51,17 @@ class NewPlantBluetoothSheetViewmodel extends BaseViewModel {
 
   Future _startScanning() async {
     _systemDevices = await FlutterBluePlus.systemDevices;
-    await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
+    await FlutterBluePlus.startScan(
+      timeout: const Duration(seconds: 15),
+      //withServiceData: [ServiceDataFilter(Guid("0000fcd2-0000-1000-8000-00805f9b34fb"))],
+      withKeywords: ['greenguard'],
+    );
   }
 
   List<Widget> buildPlantDeviceList() {
     return _scanResults
         .map(
           (r) => InkWell(
-              // borderRadius: BorderRadius.circular(12.0),
               child: ListTile(
                 leading: const Icon(Symbols.settings_remote),
                 title: Text(r.device.platformName),
