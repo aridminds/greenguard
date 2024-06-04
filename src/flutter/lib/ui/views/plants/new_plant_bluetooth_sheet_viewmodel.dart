@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:greenguard/app/app.locator.dart';
+import 'package:greenguard/services/bthome/bthome.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -59,13 +60,26 @@ class NewPlantBluetoothSheetViewmodel extends BaseViewModel {
   }
 
   List<Widget> buildPlantDeviceList() {
+    if (_scanResults.isEmpty) {
+      return [
+        const ListTile(
+          title: Text('No devices found'),
+        ),
+      ];
+    }
+
+    var serviceData = _scanResults[0].advertisementData.serviceData;
+
+    var bthomeSensor = BTHomeSensor();
+    var measurements = bthomeSensor.parseBTHomeV2(serviceData.entries.first.value);
+
     return _scanResults
         .map(
           (r) => InkWell(
               child: ListTile(
                 leading: const Icon(Symbols.settings_remote),
                 title: Text(r.device.platformName),
-                subtitle: Text(r.device.remoteId.str),
+                subtitle: Text(measurements[0].data.toString()),
               ),
               onTap: () => {}),
         )
