@@ -1,8 +1,8 @@
 import 'package:greenguard/services/bthome/measurement_type.dart';
 
-class Measurement<T> {
+class Measurement {
   final MeasurementType measurementType;
-  final T data;
+  final double data;
 
   Measurement(this.measurementType, this.data);
 }

@@ -190,11 +190,11 @@ class BTHomeSensor {
         case DataType.uint32:
         case DataType.uint48:
           var value = _parseUnsignedInteger(data, measurementType.dataType, measurementType.factor);
-          measurements.add(Measurement<double>(measurementType, value));
+          measurements.add(Measurement(measurementType, value));
           break;
         case DataType.sint16:
           var value = _parseSignedInteger(data, measurementType.dataType, measurementType.factor);
-          measurements.add(Measurement<double>(measurementType, value));
+          measurements.add(Measurement(measurementType, value));
           break;
         case DataType.raw:
         case DataType.text:

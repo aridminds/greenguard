@@ -68,10 +68,7 @@ class NewPlantBluetoothSheetViewmodel extends BaseViewModel {
       ];
     }
 
-    var serviceData = _scanResults[0].advertisementData.serviceData;
-
     var bthomeSensor = BTHomeSensor();
-    var measurements = bthomeSensor.parseBTHomeV2(serviceData.entries.first.value);
 
     return _scanResults
         .map(
@@ -79,7 +76,7 @@ class NewPlantBluetoothSheetViewmodel extends BaseViewModel {
               child: ListTile(
                 leading: const Icon(Symbols.settings_remote),
                 title: Text(r.device.platformName),
-                subtitle: Text(measurements[0].data.toString()),
+                subtitle: Text(bthomeSensor.parseBTHomeV2(r.advertisementData.serviceData.entries.first.value).first.data.toString()),
               ),
               onTap: () => {}),
         )
