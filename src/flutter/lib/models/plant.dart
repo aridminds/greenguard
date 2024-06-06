@@ -4,13 +4,13 @@ class Plant {
   final int id;
   final String name;
   final String description;
-  final Uint8List? image;
+  final bool bthome;
 
   Plant({
     required this.id,
     required this.name,
     required this.description,
-    this.image,
+    this.bthome = false,
   });
 
   Plant copyWith({
@@ -18,12 +18,13 @@ class Plant {
     String? name,
     String? description,
     Uint8List? image,
+    bool? isSensor,
   }) {
     return Plant(
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      image: image ?? this.image,
+      bthome: isSensor ?? this.bthome,
     );
   }
 
@@ -32,7 +33,7 @@ class Plant {
       'id': id,
       'name': name,
       'description': description,
-      'image': image,
+      'bthome': bthome ? 1 : 0,
     };
   }
 
@@ -41,28 +42,24 @@ class Plant {
       id: map['id'],
       name: map['name'],
       description: map['description'],
-      image: map['image'],
+      bthome: map['bthome'] == 1,
     );
   }
 
   @override
   String toString() {
-    return 'PlantModel(id: $id, name: $name, description: $description, image: $image)';
+    return 'PlantModel(id: $id, name: $name, description: $description, bthome: $bthome)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Plant &&
-        other.id == id &&
-        other.name == name &&
-        other.description == description &&
-        other.image == image;
+    return other is Plant && other.id == id && other.name == name && other.description == description && other.bthome == bthome;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ description.hashCode ^ image.hashCode;
+    return id.hashCode ^ name.hashCode ^ description.hashCode ^ bthome.hashCode;
   }
 }

@@ -20,17 +20,42 @@ class DatabaseHelper {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT,
         description TEXT,
-        image BLOB NULL
+        bthome INTEGER DEFAULT 0
       )
     ''');
   }
 
-  Future<int> insertPlant(String name, String description) async {
+  Future<Plant> getPlant(int id) async {
+    final List<Map<String, dynamic>> plants = await _database.query(
+      'plants',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    return Plant(
+      id: plants[0]['id'],
+      name: plants[0]['name'],
+      description: plants[0]['description'],
+      bthome: plants[0]['bthome'],
+    );
+  }
+
+  Future<void> updatePlant(Plant plant) async {
+    await _database.update(
+      'plants',
+      plant.toMap(),
+      where: 'id = ?',
+      whereArgs: [plant.id],
+    );
+  }
+
+  Future<int> insertPlant(String name, String description, {bool bthome = false}) async {
     return await _database.insert(
         'plants',
         {
           'name': name,
           'description': description,
+          'bthome': bthome ? 1 : 0,
         },
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
@@ -51,8 +76,23 @@ class DatabaseHelper {
         id: plants[i]['id'],
         name: plants[i]['name'],
         description: plants[i]['description'],
-        image: plants[i]['image'],
+        bthome: plants[i]['bthome'] == 1,
       );
     });
+  }
+
+  Future<Plant> getPlantFilteredWhere(String where, List<dynamic> whereArgs) async {
+    final List<Map<String, dynamic>> plants = await _database.query(
+      'plants',
+      where: where,
+      whereArgs: whereArgs,
+    );
+
+    return Plant(
+      id: plants[0]['id'],
+      name: plants[0]['name'],
+      description: plants[0]['description'],
+      bthome: plants[0]['bthome'],
+    );
   }
 }

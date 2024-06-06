@@ -36,7 +36,7 @@ class PlantsView extends StatelessWidget {
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(12.0),
                                 child: ListTile(
-                                  leading: const Icon(Symbols.potted_plant),
+                                  leading: Icon(plant.bthome ? Symbols.bluetooth : Symbols.potted_plant),
                                   title: Text(plant.name),
                                   subtitle: Text(plant.description),
                                 ),
