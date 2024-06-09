@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenguard/app/app.locator.dart';
 import 'package:greenguard/ui/views/settings/settings_viewmodel.dart';
 import 'package:greenguard/ui/widgets/custom_sliver_app_bar.dart';
 import 'package:stacked/stacked.dart';
@@ -9,7 +10,9 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SettingsViewModel>.reactive(
-      viewModelBuilder: () => SettingsViewModel(),
+      viewModelBuilder: () => locator<SettingsViewModel>(),
+      disposeViewModel: false,
+      initialiseSpecialViewModelsOnce: true,
       builder: (context, viewModel, child) {
         return const CustomScrollView(
           slivers: [

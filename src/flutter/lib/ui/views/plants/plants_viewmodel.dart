@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:greenguard/app/app.locator.dart';
 import 'package:greenguard/models/plant.dart';
 import 'package:greenguard/services/database_helper.dart';
+import 'package:greenguard/services/plant_service.dart';
 import 'package:greenguard/ui/views/plants/new_plant_bluetooth_sheet.dart';
 import 'package:greenguard/ui/views/plants/new_plant_sheet.dart';
 import 'package:stacked/stacked.dart';
 
 class PlantsViewModel extends BaseViewModel {
+  final _plantService = locator<PlantService>();
   final _databaseHelper = locator<DatabaseHelper>();
 
-  Future<List<Plant>> getPlants() async {
-    return _databaseHelper.getPlants();
+  var plants = <Plant>[];
+
+  Future<void> initialize(BuildContext context) async {
+    plants = await _plantService.getPlants();
+
+    notifyListeners();
+  }
+
+  Future<void> refreshPlants() async {
+    plants = await _plantService.getPlants();
+    notifyListeners();
   }
 
   void tapPlant(Plant plant) {
@@ -19,6 +30,7 @@ class PlantsViewModel extends BaseViewModel {
 
   void longPressPlant(Plant plant) {
     _databaseHelper.deletePlant(plant);
+    plants.remove(plant);
     notifyListeners();
   }
 
@@ -31,7 +43,7 @@ class PlantsViewModel extends BaseViewModel {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.0)),
       ),
-      builder: (context) => isBluetooth ? NewPlantBluetoothSheet(onPlantAdded: notifyListeners) : NewPlantSheet(onPlantAdded: notifyListeners),
+      builder: (context) => isBluetooth ? NewPlantBluetoothSheet(onPlantAdded: refreshPlants) : NewPlantSheet(onPlantAdded: refreshPlants),
     );
   }
 }

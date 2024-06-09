@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenguard/app/app.locator.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:stacked/stacked.dart';
 import 'navigation_viewmodel.dart';
@@ -10,7 +11,9 @@ class NavigationView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<NavigationViewModel>.reactive(
       onViewModelReady: (model) => model.initialize(context),
-      viewModelBuilder: () => NavigationViewModel(),
+      viewModelBuilder: () => locator<NavigationViewModel>(),
+      disposeViewModel: false,
+      initialiseSpecialViewModelsOnce: true,
       builder: (context, model, child) {
         return Scaffold(
           body: model.getViewForIndex(model.currentIndex),
@@ -20,7 +23,7 @@ class NavigationView extends StatelessWidget {
             destinations: const <Widget>[
               NavigationDestination(
                 icon: Icon(Symbols.home_and_garden),
-                label: 'Startseite',
+                label: 'Übersicht',
               ),
               NavigationDestination(
                 icon: Icon(Symbols.potted_plant),

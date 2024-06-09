@@ -23,7 +23,8 @@ class NewPlantBluetoothSheet extends StatelessWidget {
           builder: (_, scrollContainer) => ListView(
             controller: scrollContainer,
             children: <Widget>[
-              ...viewModel.buildPlantDeviceList()],
+              ...viewModel.buildPlantDeviceList(),
+            ],
           ),
         );
       },

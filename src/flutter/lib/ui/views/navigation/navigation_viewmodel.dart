@@ -10,7 +10,7 @@ import 'package:stacked_services/stacked_services.dart';
 
 class NavigationViewModel extends IndexTrackingViewModel {
   Future<void> initialize(BuildContext context) async {
-    final dynamicTheme = DynamicTheme.of(context)!;
+    //final dynamicTheme = DynamicTheme.of(context)!;
     //await dynamicTheme.setTheme(0);
   }
 

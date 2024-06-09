@@ -8,7 +8,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
 
-  locator<DatabaseHelper>().initDatabase();
+  await locator<DatabaseHelper>().initDatabase();
 
   runApp(const MyApp());
 }

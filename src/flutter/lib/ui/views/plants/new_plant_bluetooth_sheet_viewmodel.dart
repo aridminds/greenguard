@@ -53,17 +53,20 @@ class NewPlantBluetoothSheetViewmodel extends BaseViewModel {
 
   Future _startScanning() async {
     await FlutterBluePlus.startScan(
-      timeout: const Duration(seconds: 15),
+      timeout: const Duration(seconds: 60),
+      //withServices: [Guid("fcd2")],
       //withServiceData: [ServiceDataFilter(Guid("0000fcd2-0000-1000-8000-00805f9b34fb"))],
-      withKeywords: ['greenguard'],
+      //withKeywords: ['greenguard'],
     );
   }
 
   List<Widget> buildPlantDeviceList() {
+    _scanResults = _scanResults.where((r) => r.advertisementData.serviceData.keys.contains(Guid("fcd2"))).toList();
+
     if (_scanResults.isEmpty) {
       return [
         const ListTile(
-          title: Text('No devices found'),
+          title: Text('Keine BTHome Geräte gefunden'),
         ),
       ];
     }
@@ -74,15 +77,15 @@ class NewPlantBluetoothSheetViewmodel extends BaseViewModel {
         .map((r) => InkWell(
             child: ListTile(
               leading: const Icon(Symbols.settings_remote),
-              title: Text(r.device.platformName),
-              subtitle: Text(bthomeSensor.parseBTHomeV2(r.advertisementData.serviceData.entries.first.value).first.data.toString()),
+              title: Text("${r.device.platformName} (${bthomeSensor.parseBTHomeV2(r.advertisementData.serviceData.entries.first.value).first.data.toString()})"),
+              subtitle: Text(r.device.remoteId.toString()),
             ),
-            onTap: () async => await addPlant(r.device.platformName)))
+            onTap: () async => await addPlant(r.device.platformName, remoteId: r.device.remoteId.toString())))
         .toList();
   }
 
-  Future<void> addPlant(String name) async {
-    await _databaseHelper.insertPlant(name, 'BTHome', bthome: true);
+  Future<void> addPlant(String name, {String? remoteId}) async {
+    await _databaseHelper.insertPlant(name, remoteId, remoteId: remoteId);
 
     if (onPlantAdded != null) {
       onPlantAdded!();
