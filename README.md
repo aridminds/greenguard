@@ -1,11 +1,13 @@
 # GreenGuard
 
-GreenGuard is an application that allows users to monitor the values of their plants. Users can manually track the plants or automatically fetch the values from a BTHome sensor.
+GreenGuard is an application that allows you to track the needs of your plants. This can be done manually by scheduling tasks or with the help of BTHome sensors.
 
 ## Features
 
-- Manual Plant Value Tracking: Users can manually input and track the values of their plants.
-- Automatic Plant Value Fetching: With a BTHome sensor, plant values can be automatically fetched and displayed in the app.
+- Manual recording with the help of task scheduling
+- Automatic tracking using BTHome sensors such as:
+  - https://github.com/rbaron/b-parasite
+  - The example for an esp32-based sensor stored here in the repository
 
 ## Installation
 
