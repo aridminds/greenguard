@@ -9,7 +9,10 @@
 import 'package:stacked_services/src/navigation/navigation_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
+import '../services/ble_service.dart';
 import '../services/database_helper.dart';
+import '../services/foreground_service/collect_bthome_data_task.dart';
+import '../services/foreground_service/foreground_task_service.dart';
 import '../services/plant_service.dart';
 import '../ui/views/home/home_viewmodel.dart';
 import '../ui/views/navigation/navigation_viewmodel.dart';
@@ -34,4 +37,7 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DatabaseHelper());
   locator.registerLazySingleton(() => PlantService());
+  locator.registerLazySingleton(() => ForegroundTaskService());
+  locator.registerLazySingleton(() => BleService());
+  locator.registerLazySingleton(() => CollectBthomeDataTask());
 }

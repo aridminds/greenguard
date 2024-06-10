@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:greenguard/app/app.locator.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -16,7 +17,22 @@ class NavigationView extends StatelessWidget {
       initialiseSpecialViewModelsOnce: true,
       builder: (context, model, child) {
         return Scaffold(
-          body: model.getViewForIndex(model.currentIndex),
+          body: PageTransitionSwitcher(
+            duration: const Duration(milliseconds: 250),
+            transitionBuilder: (
+              Widget child,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+            ) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                fillColor: Theme.of(context).colorScheme.surface,
+                child: child,
+              );
+            },
+            child: model.getViewForIndex(model.currentIndex),
+          ),
           bottomNavigationBar: NavigationBar(
             onDestinationSelected: model.setIndex,
             selectedIndex: model.currentIndex,

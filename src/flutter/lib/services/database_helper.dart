@@ -9,7 +9,7 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   late Database _database;
 
-  Future initDatabase() async {
+  Future initialize() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'greenguard.db');
     _database = await sql.openDatabase(path, version: 1, onCreate: _onCreate);

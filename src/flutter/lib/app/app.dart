@@ -1,4 +1,7 @@
+import 'package:greenguard/services/ble_service.dart';
 import 'package:greenguard/services/database_helper.dart';
+import 'package:greenguard/services/foreground_service/collect_bthome_data_task.dart';
+import 'package:greenguard/services/foreground_service/foreground_task_service.dart';
 import 'package:greenguard/services/plant_service.dart';
 import 'package:greenguard/ui/views/home/home_viewmodel.dart';
 import 'package:greenguard/ui/views/plants/plants_view.dart';
@@ -20,6 +23,9 @@ import '../ui/views/navigation/navigation_viewmodel.dart';
     LazySingleton(classType: NavigationService),
     LazySingleton(classType: DatabaseHelper),
     LazySingleton(classType: PlantService),
+    LazySingleton(classType: ForegroundTaskService),
+    LazySingleton(classType: BleService),
+    LazySingleton(classType: CollectBthomeDataTask),
   ],
 )
 class AppSetup {}
