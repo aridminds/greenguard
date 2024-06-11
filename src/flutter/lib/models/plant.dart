@@ -1,3 +1,4 @@
+import 'package:greenguard/models/sensor_data.dart';
 import 'package:greenguard/models/watering_need.dart';
 
 class Plant {
@@ -8,6 +9,7 @@ class Plant {
   final int wateringInterval;
   final DateTime? lastWatered;
   final WateringNeed wateringNeed;
+  final SensorData? latestSensorData;
 
   bool get isBluetooth => remoteId != null;
 
@@ -19,6 +21,7 @@ class Plant {
     this.wateringInterval = 7,
     this.lastWatered,
     this.wateringNeed = WateringNeed.low,
+    this.latestSensorData,
   });
 
   Plant copyWith({
@@ -28,6 +31,7 @@ class Plant {
     String? remoteId,
     int? wateringInterval,
     WateringNeed? wateringNeed,
+    SensorData? latestSensorData,
   }) {
     return Plant(
       id: id ?? this.id,
@@ -36,6 +40,7 @@ class Plant {
       remoteId: remoteId ?? this.remoteId,
       wateringInterval: wateringInterval ?? this.wateringInterval,
       wateringNeed: wateringNeed ?? this.wateringNeed,
+      latestSensorData: latestSensorData ?? this.latestSensorData,
     );
   }
 
@@ -47,6 +52,7 @@ class Plant {
       'remote_id': remoteId,
       'watering_interval': wateringInterval,
       'watering_need': wateringNeed.index,
+      'latest_sensor_data': latestSensorData?.toMap(),
     };
   }
 
@@ -58,6 +64,7 @@ class Plant {
       remoteId: map['remote_id'],
       wateringInterval: map['watering_interval'],
       wateringNeed: WateringNeed.values[map['watering_need']],
+      latestSensorData: map['latest_sensor_data'] != null ? SensorData.fromMap(map['latest_sensor_data']) : null,
     );
   }
 
@@ -76,11 +83,12 @@ class Plant {
         other.description == description &&
         other.remoteId == remoteId &&
         other.wateringInterval == wateringInterval &&
-        other.wateringNeed == wateringNeed;
+        other.wateringNeed == wateringNeed &&
+        other.latestSensorData == latestSensorData;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ name.hashCode ^ description.hashCode ^ remoteId.hashCode ^ wateringInterval.hashCode ^ wateringNeed.hashCode;
+    return id.hashCode ^ name.hashCode ^ description.hashCode ^ remoteId.hashCode ^ wateringInterval.hashCode ^ wateringNeed.hashCode ^ latestSensorData.hashCode;
   }
 }

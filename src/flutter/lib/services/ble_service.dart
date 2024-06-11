@@ -47,9 +47,9 @@ class BleService {
   }
 
   Future startScanning({required int timeout}) async {
-    // if (_isScanning) {
-    //   return;
-    // }
+    if (_isScanning) {
+      return;
+    }
 
     await FlutterBluePlus.startScan(timeout: Duration(seconds: timeout));
   }

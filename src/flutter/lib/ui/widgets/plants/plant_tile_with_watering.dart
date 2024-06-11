@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/models/plant.dart';
 import 'package:greenguard/models/watering_need.dart';
+import 'package:intl/intl.dart'; // for date format
+import 'package:intl/date_symbol_data_local.dart'; // for other locales
 import 'package:material_symbols_icons/symbols.dart';
 
 class PlantTileWithWateringInfo extends StatelessWidget {
@@ -33,25 +35,41 @@ class PlantTileWithWateringInfo extends StatelessWidget {
           );
   }
 
+  Widget _getText(BuildContext context) {
+    String createdAtLabel = "";
+    String soilMoistureLabel = "";
+
+    if (plant.latestSensorData != null) {
+      initializeDateFormatting('de');
+      createdAtLabel = DateFormat.yMd('de').add_Hms().format(plant.latestSensorData!.createdAt);
+      soilMoistureLabel = "${plant.latestSensorData!.soilMoisture}%";
+    } else {
+      createdAtLabel = "Keine Daten";
+      soilMoistureLabel = "Keine Daten";
+    }
+
+    return plant.isBluetooth
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(plant.name, style: Theme.of(context).textTheme.bodyLarge),
+              Text("Bodenfeuchtigkeit: $soilMoistureLabel", style: Theme.of(context).textTheme.bodySmall),
+              Text("Erfasst: $createdAtLabel", style: Theme.of(context).textTheme.bodySmall),
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[Text(plant.name, style: Theme.of(context).textTheme.bodyLarge)],
+          );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.only(left: 16, top: 14, right: 16, bottom: 14),
         child: Row(
-          children: <Widget>[
-            _getWateringIcon(),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(plant.name, style: Theme.of(context).textTheme.bodyLarge),
-                Text("Bewässert am ${plant.lastWatered}", style: Theme.of(context).textTheme.bodyMedium),
-              ],
-            ),
-            const Spacer(),
-            _getWateringButton(context)
-          ],
+          children: <Widget>[_getWateringIcon(), const SizedBox(width: 16), _getText(context), const Spacer(), _getWateringButton(context)],
         ),
       ),
     );

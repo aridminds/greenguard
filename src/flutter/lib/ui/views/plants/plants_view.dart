@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/app/app.locator.dart';
-import 'package:greenguard/models/plant.dart';
 import 'package:greenguard/ui/views/plants/new_plant_action_button.dart';
 import 'package:greenguard/ui/views/plants/plants_viewmodel.dart';
 import 'package:greenguard/ui/widgets/custom_sliver_app_bar.dart';

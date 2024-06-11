@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:greenguard/app/app.locator.dart';
 import 'package:greenguard/main.dart';
@@ -17,12 +18,12 @@ class ForegroundTaskService {
         channelId: 'foreground_service',
         channelName: 'Foreground Service Notification',
         channelDescription: 'This notification appears when the foreground service is running.',
-        channelImportance: NotificationChannelImportance.LOW,
-        priority: NotificationPriority.LOW,
+        channelImportance: NotificationChannelImportance.MIN,
+        priority: NotificationPriority.MIN,
         iconData: const NotificationIconData(
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
-          name: 'launcher',
+          name: 'launcher'
         ),
       ),
       iosNotificationOptions: const IOSNotificationOptions(
@@ -30,10 +31,9 @@ class ForegroundTaskService {
         playSound: false,
       ),
       foregroundTaskOptions: const ForegroundTaskOptions(
-        interval: 30000,
+        interval: 900000,
         isOnceEvent: false,
         autoRunOnBoot: true,
-        allowWakeLock: true,
         autoRunOnMyPackageReplaced: true,
       ),
     );

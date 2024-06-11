@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:greenguard/models/plant.dart';
-import 'package:greenguard/models/watering_need.dart';
+import 'package:greenguard/models/sensor_data.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sql;
@@ -25,13 +25,17 @@ class DatabaseHelper {
         watering_interval INTEGER DEFAULT 7,
         watering_need INTEGER DEFAULT 0
       );
-      
+    ''');
+
+    await db.execute('''
       CREATE TABLE sensor_data(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         plant_id INTEGER,
-        temperature REAL,
-        humidity REAL,
-        light_intensity REAL,
+        temperature REAL DEFAULT NULL,
+        humidity REAL DEFAULT NULL,
+        soil_moisture REAL DEFAULT NULL,
+        light_intensity REAL DEFAULT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY(plant_id) REFERENCES plants(id)
           ON DELETE CASCADE
           ON UPDATE CASCADE
@@ -46,15 +50,8 @@ class DatabaseHelper {
       whereArgs: [id],
     );
 
-    return Plant(
-      id: plants[0]['id'],
-      name: plants[0]['name'],
-      description: plants[0]['description'],
-      remoteId: plants[0]['remote_id'],
-      wateringInterval: plants[0]['watering_interval'],
-      lastWatered: plants[0]['last_watered'],
-      wateringNeed: WateringNeed.values[plants[0]['watering_need']],
-    );
+    var sensorData = await getLatestSensorDataForPlant(id);
+    return Plant.fromMap(plants[0]).copyWith(latestSensorData: sensorData);
   }
 
   Future<void> updatePlant(Plant plant) async {
@@ -88,17 +85,10 @@ class DatabaseHelper {
   Future<List<Plant>> getPlants() async {
     final List<Map<String, dynamic>> plants = await _database.query('plants');
 
-    return List.generate(plants.length, (i) {
-      return Plant(
-        id: plants[i]['id'],
-        name: plants[i]['name'],
-        description: plants[i]['description'],
-        remoteId: plants[i]['remote_id'],
-        wateringInterval: plants[i]['watering_interval'],
-        lastWatered: plants[i]['last_watered'],
-        wateringNeed: WateringNeed.values[plants[i]['watering_need']],
-      );
-    });
+    return Future.wait(plants.map((plant) async {
+      var sensorData = await getLatestSensorDataForPlant(plant['id']);
+      return Plant.fromMap(plant).copyWith(latestSensorData: sensorData);
+    }));
   }
 
   Future<List<Plant>> getPlantFilteredWhere(String where, List<dynamic> whereArgs) async {
@@ -108,16 +98,49 @@ class DatabaseHelper {
       whereArgs: whereArgs,
     );
 
-    return List.generate(plants.length, (i) {
-      return Plant(
-        id: plants[i]['id'],
-        name: plants[i]['name'],
-        description: plants[i]['description'],
-        remoteId: plants[i]['remote_id'],
-        wateringInterval: plants[i]['watering_interval'],
-        lastWatered: plants[i]['last_watered'],
-        wateringNeed: WateringNeed.values[plants[i]['watering_need']],
-      );
+    return Future.wait(plants.map((plant) async {
+      var sensorData = await getLatestSensorDataForPlant(plant['id']);
+      return Plant.fromMap(plant).copyWith(latestSensorData: sensorData);
+    }));
+  }
+
+  Future<void> insertSensorData(SensorData sensorData) async {
+    await _database.insert(
+      'sensor_data',
+      sensorData.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<SensorData?> getLatestSensorDataForPlant(int plantId) async {
+    final List<Map<String, dynamic>> sensorData = await _database.query(
+      'sensor_data',
+      where: 'plant_id = ?',
+      whereArgs: [plantId],
+      orderBy: 'created_at DESC',
+      limit: 1,
+    );
+
+    if (sensorData.isEmpty) {
+      return null;
+    }
+
+    return SensorData.fromMap(sensorData[0]);
+  }
+
+  Future<List<SensorData>?> getSensorDataForPlant(int plantId) async {
+    final List<Map<String, dynamic>> sensorData = await _database.query(
+      'sensor_data',
+      where: 'plant_id = ?',
+      whereArgs: [plantId],
+    );
+
+    if (sensorData.isEmpty) {
+      return null;
+    }
+
+    return List.generate(sensorData.length, (i) {
+      return SensorData.fromMap(sensorData[i]);
     });
   }
 }
