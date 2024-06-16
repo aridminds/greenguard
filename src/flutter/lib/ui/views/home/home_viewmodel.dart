@@ -5,6 +5,7 @@ import 'package:greenguard/models/watering_need.dart';
 import 'package:greenguard/services/plant_service.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:stacked/stacked.dart';
+import 'package:workmanager/workmanager.dart';
 
 class HomeViewModel extends BaseViewModel {
   final _plantService = locator<PlantService>();
@@ -16,7 +17,7 @@ class HomeViewModel extends BaseViewModel {
     plantsWithWateringNeedsLow = await _plantService.getPlantsWithWateringNeeds(WateringNeed.low);
     plantsWithWateringNeedsMedium = await _plantService.getPlantsWithWateringNeeds(WateringNeed.medium);
 
-    rebuildUi();
+    notifyListeners();
   }
 
   Future<void> refreshPlants({WateringNeed? wateringNeed}) async {
@@ -35,12 +36,17 @@ class HomeViewModel extends BaseViewModel {
           break;
       }
     }
-    rebuildUi();
+
+    notifyListeners();
   }
 
   Future<void> waterPlant(Plant plant) async {
     await _plantService.waterPlant(plant);
     await refreshPlants();
+  }
+
+  Future<void> rescanPlants() async {
+    await Workmanager().registerOneOffTask("manuel_scan", "manuel_scan");
   }
 
   List<Widget> buildPlantDeviceList(List<Plant> plants) {

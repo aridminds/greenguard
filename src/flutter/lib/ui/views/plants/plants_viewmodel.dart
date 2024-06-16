@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/app/app.locator.dart';
+import 'package:greenguard/app/app.router.dart';
 import 'package:greenguard/models/plant.dart';
 import 'package:greenguard/services/database_helper.dart';
 import 'package:greenguard/services/plant_service.dart';
 import 'package:greenguard/ui/views/plants/new_plant_bluetooth_sheet.dart';
 import 'package:greenguard/ui/views/plants/new_plant_sheet.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class PlantsViewModel extends BaseViewModel {
   final _plantService = locator<PlantService>();
   final _databaseHelper = locator<DatabaseHelper>();
+  final _navigationService = locator<NavigationService>();
 
   var plants = <Plant>[];
 
@@ -25,7 +28,7 @@ class PlantsViewModel extends BaseViewModel {
   }
 
   void tapPlant(Plant plant) {
-    // TODO: Implement plant detail view
+    _navigationService.navigateToPlantDetailView(plant: plant);
   }
 
   void longPressPlant(Plant plant) {

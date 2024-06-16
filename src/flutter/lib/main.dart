@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:greenguard/app/app.locator.dart';
 import 'package:greenguard/services/ble_service.dart';
+import 'package:greenguard/services/bthome/bthome.dart';
 import 'package:greenguard/services/database_helper.dart';
-import 'package:greenguard/services/foreground_service/foreground_task_service.dart';
-import 'package:greenguard/services/foreground_service/scan_task_handler.dart';
+import 'package:greenguard/services/plant_service.dart';
 import 'package:greenguard/ui/theme/dynamic_theme_builder.dart';
 import 'package:greenguard/ui/views/navigation/navigation_view.dart';
+import 'package:workmanager/workmanager.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,27 +15,108 @@ Future main() async {
 
   await locator<DatabaseHelper>().initialize();
   await locator<BleService>().initialize();
-  locator<ForegroundTaskService>().initialize();
 
-  runApp(const MyApp());
+  Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
+
+  runApp(const GreenGuardApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class GreenGuardApp extends StatefulWidget {
+  const GreenGuardApp({super.key});
+
+  @override
+  GreenGuardAppState createState() => GreenGuardAppState();
+}
+
+class GreenGuardAppState extends State<GreenGuardApp> with WidgetsBindingObserver {
+  late final AppLifecycleListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _listener = AppLifecycleListener(
+      onDetach: _onDetach,
+      onPause: _onPause,
+    );
+  }
+
+  Future<void> _onPause() async {
+    await Workmanager().registerPeriodicTask(
+      "periodic_scan",
+      "periodic_scan"
+    );
+  }
+
+  Future<void> _onDetach() async {
+    await Workmanager().registerPeriodicTask(
+      "periodic_scan",
+      "periodic_scan"
+    );
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const WithForegroundTask(
-      child: DynamicThemeBuilder(
-        title: 'GreenGuard',
-        home: NavigationView(),
-      ),
+    return const DynamicThemeBuilder(
+      title: 'GreenGuard',
+      home: NavigationView(),
     );
   }
 }
 
-// The callback function should always be a top-level function.
 @pragma('vm:entry-point')
-void startCallback() {
-  FlutterForegroundTask.setTaskHandler(ScanTaskHandler());
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    try {
+      await setupLocator();
+      await locator<DatabaseHelper>().initialize();
+      await locator<BleService>().initialize();
+
+      var bleService = locator<BleService>();
+      var plantService = locator<PlantService>();
+
+      var scanResults = <ScanResult>[];
+
+      var scanSubscription = bleService.scanResults.listen((List<ScanResult> results) {
+        scanResults = results;
+      });
+
+      await bleService.startScanning(timeout: 20);
+      await Future.delayed(const Duration(seconds: 20));
+
+      scanSubscription.cancel();
+
+      if (scanResults.isEmpty) {
+        return Future.value(true);
+      }
+
+      var plantsWithSensors = await plantService.getPlantsWithBthomeSensor();
+
+      if (plantsWithSensors.isEmpty) {
+        return Future.value(true);
+      }
+
+      for (var plant in plantsWithSensors) {
+        var sensorData = scanResults.firstWhere((element) => element.device.remoteId.toString() == plant.remoteId);
+
+        var btHomeSensor = BTHomeSensor();
+        var soilMoisture = btHomeSensor.parseBTHomeV2(sensorData.advertisementData.serviceData.entries.first.value).first.data;
+
+        await plantService.updateSensorData(plant, soilMoisture: soilMoisture);
+      }
+
+      return Future.value(true);
+    } catch (e) {
+      return Future.value(false);
+    }
+  });
 }

@@ -31,7 +31,7 @@ class SensorData {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      // 'id': id,
       'plant_id': plantId,
       'temperature': temperature,
       'humidity': humidity,

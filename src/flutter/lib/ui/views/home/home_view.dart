@@ -20,12 +20,18 @@ class HomeView extends StatelessWidget {
       builder: (context, viewModel, child) {
         return CustomScrollView(
           slivers: [
-            const CustomSliverAppBar(
-              title: Text('Übersicht'),
+            CustomSliverAppBar(
+              title: const Text('Übersicht'),
               isMainView: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(Symbols.bluetooth_searching),
+                  onPressed: () => viewModel.rescanPlants(),
+                ),
+              ],
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               sliver: SliverList(
                 delegate: SliverChildListDelegate.fixed(
                   <Widget>[

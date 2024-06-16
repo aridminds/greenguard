@@ -51,8 +51,7 @@ class Plant {
       'description': description,
       'remote_id': remoteId,
       'watering_interval': wateringInterval,
-      'watering_need': wateringNeed.index,
-      'latest_sensor_data': latestSensorData?.toMap(),
+      'watering_need': wateringNeed.index
     };
   }
 

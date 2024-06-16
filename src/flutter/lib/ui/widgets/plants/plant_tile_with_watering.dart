@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenguard/models/plant.dart';
 import 'package:greenguard/models/watering_need.dart';
-import 'package:intl/intl.dart'; // for date format
-import 'package:intl/date_symbol_data_local.dart'; // for other locales
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class PlantTileWithWateringInfo extends StatelessWidget {

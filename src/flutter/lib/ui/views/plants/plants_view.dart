@@ -25,7 +25,7 @@ class PlantsView extends StatelessWidget {
                 isMainView: true,
               ),
               SliverPadding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.only(left: 20, right: 20),
                 sliver: viewModel.plants.isEmpty
                     ? const SliverFillRemaining(
                         hasScrollBody: false,
